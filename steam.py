@@ -106,58 +106,62 @@ def set_wishlist(chatid, title):
           """.format(chatid, title))
     conn.commit()
 
-def  delete_notif(chat_id):
+
+def delete_notif(chat_id):
     c.execute("delete from wishlist where chat_id=='{}'".format(chat_id))
     conn.commit()
-    msg="""🔇All games on your wishlist have been removed and notifications have been disabled.
+    msg = """🔇All games on your wishlist have been removed and notifications have been disabled.
 🔴You can add a game to your wishlist by searching for it."""
-    
-    send_private_message(chat_id,msg)
+
+    send_private_message(chat_id, msg)
+
+
 def check_wish():
     while True:
-        time.sleep(60)
-        s = c.execute("select * from wishlist").fetchall()
-        
-        for i in s:
-            name=i[2]
-            cid=i[1]
-            all=c.execute("select * from deals where title like '%{}%'".format(name)).fetchall()
-            for n in all:
-                    print(cid,n)
-                    
+        try:
+            time.sleep(60)
+            s = c.execute("select * from wishlist").fetchall()
+
+            for i in s:
+                name = i[2]
+                cid = i[1]
+                all = c.execute(
+                    "select * from deals where title like '%{}%'".format(name)).fetchall()
+                for n in all:
+                    print(cid, n)
+
                     msg = (
-                        
-                "🔍 Search Result:\n"
-                f"🎮 {n[1]}\n"
-                f"💰 Sale: {n[2]}$\n"
-                f"💵 Normal: {n[3]}$\n"
-                f"🔥 Discount: {n[4]}%\n"
-                f"🔗 {n[5]}"
-                "💢You searched for this game, and now it's on sale."
+
+                        "🔍 Search Result:\n"
+                        f"🎮 {n[1]}\n"
+                        f"💰 Sale: {n[2]}$\n"
+                        f"💵 Normal: {n[3]}$\n"
+                        f"🔥 Discount: {n[4]}%\n"
+                        f"🔗 {n[5]}"
+                        "💢You searched for this game, and now it's on sale."
                     )
-                    send_private_message(cid, msg) 
+                    send_private_message(cid, msg)
 
                     c.execute("delete from wishlist where id='{}'".format(i[0]))
                     conn.commit()
                     print("sent a wishlist to a user!")
-                
-    
+        except:
+            print("Error while checking")
 
 
 def first_start():
 
-
     num = random.randint(0, 50)
     params = {
-    "sortBy": "Recent",
-    "pageSize": count,
-    "pageNumber": num,
-    "storeID": 1
-}
+        "sortBy": "Recent",
+        "pageSize": count,
+        "pageNumber": num,
+        "storeID": 1
+    }
     r = requests.get(url, params=params, timeout=30)
     data = r.json()
     for _ in range(10):
-        i=random.randint(0, 45)
+        i = random.randint(0, 45)
         title = data[i]["title"]
         normal_price = data[i]["normalPrice"]
         sale_price = data[i]["salePrice"]
@@ -246,8 +250,9 @@ def check_start_command():
                     "To understand how to use the robot\n"
                     f"Join our <a href='https://t.me/{CHANNEL}'>channel</a> to see the lastest discounts"
                 )
-                s=c.execute("select * from users where chat_id='{}'".format(chat_id)).fetchall()
-                if len(s)==0:
+                s = c.execute(
+                    "select * from users where chat_id='{}'".format(chat_id)).fetchall()
+                if len(s) == 0:
                     set_user(chat_id)
                 send_private_message(chat_id, welcome_text)
 
@@ -276,10 +281,10 @@ def check_start_command():
                     "• New Steam discounts are posted every minute\n"
                     "• Game database updates every 10 minutes\n\n"
                     f"💢 Join our <a href='https://t.me/{CHANNEL}'>channel</a> to see the lastest discounts\n"
-                    
+
                 )
                 send_private_message(chat_id, help_text)
-            if text=="/end_notif":
+            if text == "/end_notif":
                 delete_notif(chat_id)
     except Exception as e:
         print("Update Error:", e)
@@ -448,7 +453,6 @@ def deals_worker():
                             f"🔗 {url2}"
                         )
 
-                      
                         li.append(msg)
 
                         c.execute("""
@@ -458,7 +462,7 @@ def deals_worker():
 
                         new_times.append(last_change_ts)
                         conn.commit()
-       
+
                 m += 1
 
         except Exception as e:
@@ -494,7 +498,7 @@ if __name__ == "__main__":
     t2 = threading.Thread(target=telegram_worker, daemon=True)
     t1 = threading.Thread(target=deals_worker, daemon=True)
     t3 = threading.Thread(target=get_all_games_periodic, daemon=True)
-    t4= threading.Thread(target=check_wish, daemon=True)
+    t4 = threading.Thread(target=check_wish, daemon=True)
     t2.start()
     t4.start()
     t1.start()
