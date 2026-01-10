@@ -144,7 +144,7 @@ def check_wish():
 
                     c.execute("delete from wishlist where id='{}'".format(i[0]))
                     conn.commit()
-                    print("sent a wishlist to a user!")
+                    # print("sent a wishlist to a user!")
         except:
             print("Error while checking")
 
