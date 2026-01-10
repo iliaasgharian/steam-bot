@@ -138,7 +138,7 @@ def check_wish():
                         f"💵 Normal: {n[3]}$\n"
                         f"🔥 Discount: {n[4]}%\n"
                         f"🔗 {n[5]}"
-                        "💢You searched for this game, and now it's on sale."
+                        "💢You searched for this game"
                     )
                     send_private_message(cid, msg)
 
