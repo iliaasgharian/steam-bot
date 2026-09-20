@@ -22,7 +22,7 @@ params = {
 db_file = "steam.db"
 
 
-interval_seconds = 60
+interval_seconds = 70
 
 
 last_update_id = None
