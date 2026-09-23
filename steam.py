@@ -19,7 +19,7 @@ params = {
     "storeID": 1
 }
 
-db_file = "steamdb.db"
+db_file = "steam.db"
 
 
 interval_seconds = 60
