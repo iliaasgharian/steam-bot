@@ -16,7 +16,7 @@ params = {
     "sortBy": "Recent",
     "pageSize": count,
     "pageNumber": 0,
-    "storeID": 2
+    "storeID": 3
 }
 
 db_file = "steam.db"
