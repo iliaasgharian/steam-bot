@@ -111,7 +111,7 @@ def delete_notif(chat_id):
     c.execute("delete from wishlist where chat_id=='{}'".format(chat_id))
     conn.commit()
     msg = """🔇All games on your wishlist have been removed and notifications have been disabled.
-🔴You can add a game to your wishlist by searching for it."""
+🔴You can add a game to your wishlist by searching for it"""
 
     send_private_message(chat_id, msg)
 
